@@ -5,12 +5,15 @@ import { useLang } from "@/lib/i18n";
 import SectionHeading from "@/components/SectionHeading";
 import { Reveal } from "@/components/motion";
 import DrivingQACard from "@/components/DrivingQACard";
+import QuizMode, { type QuizQuestion } from "@/components/QuizMode";
 import { drivingQuestions } from "@/lib/driving";
 
 export default function DrivingLicensePage() {
   const { t } = useLang();
   const [query, setQuery] = useState("");
   const [catFilter, setCatFilter] = useState("");
+  const [quizMode, setQuizMode] = useState(false);
+  const [quizCat, setQuizCat] = useState("");
 
   const filtered = useMemo(() => {
     let list = drivingQuestions;
@@ -35,6 +38,24 @@ export default function DrivingLicensePage() {
     return [...cats.entries()].sort(([a], [b]) => a.localeCompare(b));
   }, []);
 
+  const quizQuestions: QuizQuestion[] = useMemo(() => {
+    let pool = drivingQuestions;
+    if (quizCat) pool = pool.filter((q) => q.category === quizCat);
+    return pool.map((q) => ({
+      id: q.id,
+      text: q.text,
+      options: q.answers.map((a) => a.text),
+      correctIndices: q.answers
+        .map((a, i) => (a.correct ? i : -1))
+        .filter((i) => i >= 0),
+      isMulti: q.answers.filter((a) => a.correct).length > 1,
+      isNumber: q.questionType === "number",
+      correctNumber: q.correctNumber,
+      answerHint: q.answerHint,
+      picture: q.picture,
+    }));
+  }, [quizCat]);
+
   return (
     <main>
       <div className="orb orb--accent" style={{ width: 340, height: 340, top: "4%", right: "-6%" }} />
@@ -58,20 +79,28 @@ export default function DrivingLicensePage() {
               onChange={(e) => setQuery(e.target.value)}
               aria-label={t.germany.drivingQA.search}
             />
-            <select
-              className="qa-select"
-              value={catFilter}
-              onChange={(e) => setCatFilter(e.target.value)}
+            {!quizMode && (
+              <select
+                className="qa-select"
+                value={catFilter}
+                onChange={(e) => setCatFilter(e.target.value)}
+              >
+                <option value="">All categories ({drivingQuestions.length})</option>
+                {categories.map(([cat, count]) => (
+                  <option key={cat} value={cat}>
+                    {cat} ({count})
+                  </option>
+                ))}
+              </select>
+            )}
+            <button
+              className={`tool-mode-btn ${quizMode ? "active" : ""}`}
+              onClick={() => setQuizMode(!quizMode)}
             >
-              <option value="">All categories ({drivingQuestions.length})</option>
-              {categories.map(([cat, count]) => (
-                <option key={cat} value={cat}>
-                  {cat} ({count})
-                </option>
-              ))}
-            </select>
+              🧠 Quiz Mode
+            </button>
             <span className="qa-count">
-              {filtered.length} {t.germany.drivingQA.of} {drivingQuestions.length}{" "}
+              {quizMode ? quizQuestions.length : filtered.length} {t.germany.drivingQA.of} {drivingQuestions.length}{" "}
               {t.germany.drivingQA.questions}
             </span>
           </div>
@@ -80,14 +109,40 @@ export default function DrivingLicensePage() {
           </p>
         </Reveal>
 
-        <div className="qa-list">
-          {filtered.map((q) => (
-            <DrivingQACard key={q.id} q={q} />
-          ))}
-          {filtered.length === 0 && (
-            <p className="hero-sub" style={{ marginTop: 40 }}>—</p>
-          )}
-        </div>
+        {quizMode ? (
+          <>
+            <Reveal delay={0.05}>
+              <div className="quiz-cat-filter" style={{ marginBottom: 20 }}>
+                <select
+                  className="qa-select"
+                  value={quizCat}
+                  onChange={(e) => setQuizCat(e.target.value)}
+                >
+                  <option value="">All categories ({drivingQuestions.length})</option>
+                  {categories.map(([cat, count]) => (
+                    <option key={cat} value={cat}>
+                      {cat} ({count})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </Reveal>
+            <QuizMode
+              questions={quizQuestions}
+              title="Driving License Quiz"
+              onComplete={() => setQuizMode(false)}
+            />
+          </>
+        ) : (
+          <div className="qa-list">
+            {filtered.map((q) => (
+              <DrivingQACard key={q.id} q={q} />
+            ))}
+            {filtered.length === 0 && (
+              <p className="hero-sub" style={{ marginTop: 40 }}>—</p>
+            )}
+          </div>
+        )}
       </section>
     </main>
   );

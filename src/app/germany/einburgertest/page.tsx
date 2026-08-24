@@ -5,11 +5,13 @@ import { useLang } from "@/lib/i18n";
 import SectionHeading from "@/components/SectionHeading";
 import { Reveal } from "@/components/motion";
 import QACard from "@/components/QACard";
+import QuizMode, { type QuizQuestion } from "@/components/QuizMode";
 import { qaQuestions } from "@/lib/qa";
 
 export default function EinburgertestPage() {
   const { t } = useLang();
   const [query, setQuery] = useState("");
+  const [quizMode, setQuizMode] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -21,6 +23,18 @@ export default function EinburgertestPage() {
         item.options.some((o) => o.toLowerCase().includes(q))
     );
   }, [query]);
+
+  const quizQuestions: QuizQuestion[] = useMemo(
+    () =>
+      qaQuestions.map((q) => ({
+        id: q.id,
+        text: q.question,
+        options: q.options,
+        correctIndices: [q.correctAnswer],
+        isMulti: false,
+      })),
+    []
+  );
 
   return (
     <main>
@@ -45,6 +59,12 @@ export default function EinburgertestPage() {
               onChange={(e) => setQuery(e.target.value)}
               aria-label={t.germany.qa.search}
             />
+            <button
+              className={`tool-mode-btn ${quizMode ? "active" : ""}`}
+              onClick={() => setQuizMode(!quizMode)}
+            >
+              🧠 Quiz Mode
+            </button>
             <span className="qa-count">
               {filtered.length} {t.germany.qa.of} {qaQuestions.length}{" "}
               {t.germany.qa.questions}
@@ -55,16 +75,24 @@ export default function EinburgertestPage() {
           </p>
         </Reveal>
 
-        <div className="qa-list">
-          {filtered.map((q) => (
-            <QACard key={q.id} q={q} />
-          ))}
-          {filtered.length === 0 && (
-            <p className="hero-sub" style={{ marginTop: 40 }}>
-              —
-            </p>
-          )}
-        </div>
+        {quizMode ? (
+          <QuizMode
+            questions={quizQuestions}
+            title="Einbürgerungstest Quiz"
+            onComplete={() => setQuizMode(false)}
+          />
+        ) : (
+          <div className="qa-list">
+            {filtered.map((q) => (
+              <QACard key={q.id} q={q} />
+            ))}
+            {filtered.length === 0 && (
+              <p className="hero-sub" style={{ marginTop: 40 }}>
+                —
+              </p>
+            )}
+          </div>
+        )}
       </section>
     </main>
   );
