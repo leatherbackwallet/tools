@@ -5,17 +5,17 @@ import { useLang } from "@/lib/i18n";
 import SectionHeading from "@/components/SectionHeading";
 import { Reveal } from "@/components/motion";
 
-const devSlugs = ["json-csv", "base64", "regex", "jwt", "css-minifier", "url-encoder", "json-formatter", "yaml-json", "xml-formatter", "html-entity", "html-jsx", "hash", "uuid", "cron-parser", "regex-cheat", "sql-formatter"];
-const designSlugs = ["gradient", "box-shadow", "contrast", "flexbox", "css-grid", "css-animation", "palette"];
-const textSlugs = ["word-counter", "diff", "markdown", "lorem", "html-preview", "svg-preview", "html-image", "timestamp"];
-
 const categoryColors: Record<string, string> = {
   developer: "#FF5A26",
   design: "#a855f7",
   text: "#3b82f6",
 };
 
-export default function Home() {
+const devSlugs = ["json-csv", "base64", "regex", "jwt", "css-minifier", "url-encoder", "json-formatter", "yaml-json", "xml-formatter", "html-entity", "html-jsx", "hash", "uuid", "cron-parser", "regex-cheat", "sql-formatter"];
+const designSlugs = ["gradient", "box-shadow", "contrast", "flexbox", "css-grid", "css-animation", "palette"];
+const textSlugs = ["word-counter", "diff", "markdown", "lorem", "html-preview", "svg-preview", "html-image", "timestamp"];
+
+export default function ToolsPage() {
   const { t } = useLang();
 
   const findItems = (slugs: string[]) =>
@@ -54,24 +54,13 @@ export default function Home() {
         />
       </section>
 
-      <section className="container" style={{ paddingBottom: 60 }}>
+      <section className="container" style={{ paddingBottom: 100 }}>
         <Reveal>
-          <p className="hero-sub" style={{ maxWidth: 640, fontSize: 18, marginBottom: 24 }}>
+          <p className="hero-sub" style={{ maxWidth: 640, fontSize: 18, marginBottom: 50 }}>
             {t.tools.subtitle}
           </p>
         </Reveal>
-        <Reveal delay={0.1}>
-          <Link href="/germany/" className="qa-cta">
-            <div>
-              <span className="qa-cta-title">{t.germany.title1} {t.germany.title2}</span>
-              <span className="qa-cta-sub">{t.germany.intro.slice(0, 100)}…</span>
-            </div>
-            <span className="arrow">→</span>
-          </Link>
-        </Reveal>
-      </section>
 
-      <section className="container" style={{ paddingBottom: 100 }}>
         {renderGroup(t.tools.categories.developer, devSlugs, categoryColors.developer)}
         {renderGroup(t.tools.categories.design, designSlugs, categoryColors.design)}
         {renderGroup(t.tools.categories.text, textSlugs, categoryColors.text)}
