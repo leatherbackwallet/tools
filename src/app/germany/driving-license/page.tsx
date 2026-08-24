@@ -53,6 +53,7 @@ export default function DrivingLicensePage() {
       correctNumber: q.correctNumber,
       answerHint: q.answerHint,
       picture: q.picture,
+      explanation: q.info || "",
     }));
   }, [quizCat]);
 

@@ -14,6 +14,13 @@ export type QuizQuestion = {
   correctNumber?: number | null;
   answerHint?: string;
   picture?: string;
+  explanation?: string;
+};
+
+type WrongAnswer = {
+  question: QuizQuestion;
+  userAnswer: string;
+  correctAnswer: string;
 };
 
 function shuffle<T>(arr: T[]): T[] {
@@ -49,6 +56,8 @@ export default function QuizMode({
   const [finished, setFinished] = useState(false);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
+  const [wrongAnswers, setWrongAnswers] = useState<WrongAnswer[]>([]);
+  const [showReview, setShowReview] = useState(false);
 
   const q = shuffled[current];
   const total = shuffled.length;
@@ -97,6 +106,20 @@ export default function QuizMode({
         return next;
       });
     } else {
+      // Record wrong answer
+      let userAns = "";
+      let correctAns = "";
+      if (q.isNumber) {
+        userAns = numericInput || "(no answer)";
+        correctAns = `${q.correctNumber} ${q.answerHint || ""}`;
+      } else {
+        userAns = [...selected].map((i) => `${letters[i]}: ${q.options[i]}`).join(", ") || "(no answer)";
+        correctAns = q.correctIndices.map((i) => `${letters[i]}: ${q.options[i]}`).join(", ");
+      }
+      setWrongAnswers((prev) => [
+        ...prev,
+        { question: q, userAnswer: userAns, correctAnswer: correctAns },
+      ]);
       setLives((l) => l - 1);
       setStreak(0);
     }
@@ -111,7 +134,7 @@ export default function QuizMode({
     setNumericInput("");
     setChecked(false);
     setIsCorrect(false);
-  }, [isCorrect, current, total, lives]);
+  }, [isCorrect, current, total, lives, q, selected, numericInput]);
 
   const handleStart = () => {
     setStarted(true);
@@ -125,6 +148,8 @@ export default function QuizMode({
     setFinished(false);
     setStreak(0);
     setBestStreak(0);
+    setWrongAnswers([]);
+    setShowReview(false);
   };
 
   if (!started) {
@@ -149,6 +174,57 @@ export default function QuizMode({
     const pct = Math.round((score / total) * 100);
     const livesLeft = lives;
     const passed = livesLeft > 0;
+
+    if (showReview) {
+      return (
+        <div className="quiz-review">
+          <button className="tool-back" onClick={() => setShowReview(false)}>
+            ← Back to results
+          </button>
+          <h3 className="quiz-review-title">
+            Wrong Answers ({wrongAnswers.length})
+          </h3>
+          <div className="quiz-review-list">
+            {wrongAnswers.map((wa, i) => (
+              <div key={i} className="quiz-review-card">
+                {wa.question.picture && (
+                  <img
+                    src={`/driving/${wa.question.picture}`}
+                    alt=""
+                    className="quiz-review-img"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  />
+                )}
+                <p className="quiz-review-question">{wa.question.text}</p>
+                <div className="quiz-review-answers">
+                  <div className="quiz-review-row wrong">
+                    <span className="quiz-review-label">Your answer:</span>
+                    <span>{wa.userAnswer}</span>
+                  </div>
+                  <div className="quiz-review-row correct">
+                    <span className="quiz-review-label">Correct answer:</span>
+                    <span>{wa.correctAnswer}</span>
+                  </div>
+                </div>
+                {wa.question.explanation && (
+                  <div className="quiz-review-explanation">
+                    <span className="quiz-review-exp-label">Explanation:</span>
+                    <p>{wa.question.explanation}</p>
+                  </div>
+                )}
+                {wa.question.answerHint && wa.question.isNumber && (
+                  <div className="quiz-review-explanation">
+                    <span className="quiz-review-exp-label">Hint:</span>
+                    <p>{wa.question.answerHint}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="quiz-results">
         <div className="quiz-results-icon">{passed ? "🎉" : "💀"}</div>
@@ -177,6 +253,11 @@ export default function QuizMode({
           <button className="tool-btn tool-btn--primary" onClick={handleStart}>
             Try Again
           </button>
+          {wrongAnswers.length > 0 && (
+            <button className="tool-btn" onClick={() => setShowReview(true)}>
+              Review Mistakes ({wrongAnswers.length})
+            </button>
+          )}
           {onComplete && (
             <button className="tool-btn" onClick={onComplete}>
               Back to Q&A
