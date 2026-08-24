@@ -2,13 +2,13 @@ export type Lang = "en" | "de";
 
 const en = {
   meta: {
-    name: "Joseph James",
-    firstName: "Joseph",
-    lastName: "James",
-    role: "Product Owner",
-    title: "Joseph James — Senior Product Owner",
+    name: "dev.ric.castle",
+    firstName: "dev.ric.castle",
+    lastName: "",
+    role: "Tools & Resources",
+    title: "dev.ric.castle — Developer Tools & Resources",
     description:
-      "Senior Product Owner and Certified Scrum Master in Cologne, Germany. AI-driven SaaS platforms, LLM workflows and enterprise product delivery.",
+      "Free client-side developer tools, CSS generators, and Germany residency resources.",
   },
   nav: {
     home: "Home",
@@ -284,7 +284,7 @@ const en = {
     title1: "About",
     title2: "Me",
     intro:
-      "I'm Joseph — a Senior Product Owner and Certified Scrum Master based in Cologne with 10+ years of experience delivering SaaS platforms, digital products and enterprise integrations. I combine deep technical fluency in cloud architecture, LLM workflows and API systems with proven backlog ownership and stakeholder alignment.",
+      "Free client-side developer tools for coders, designers, and everyday use. JSON converters, CSS generators, regex testers, and more — all running 100% in your browser.",
     intro2:
       "My sweet spot is the gap between business goals and technical delivery — turning complex requirements into measurable product outcomes, whether that's an AI engine for real estate CRMs or a supercomputer's support infrastructure.",
     skillsTitle: "Toolbox",
@@ -333,7 +333,7 @@ const en = {
     location: "Cologne, Germany",
     emailLabel: "Email",
     linkedinLabel: "LinkedIn",
-    linkedin: "linkedin.com/in/joejmz",
+    linkedin: "",
   },
   footer: {
     rights: "All rights reserved.",
@@ -345,13 +345,13 @@ export type Dict = typeof en;
 
 const de: Dict = {
   meta: {
-    name: "Joseph James",
-    firstName: "Joseph",
-    lastName: "James",
-    role: "Product Owner",
-    title: "Joseph James — Senior Product Owner",
+    name: "dev.ric.castle",
+    firstName: "dev.ric.castle",
+    lastName: "",
+    role: "Tools & Ressourcen",
+    title: "dev.ric.castle — Entwickler-Tools & Ressourcen",
     description:
-      "Senior Product Owner und Certified Scrum Master in Köln. KI-getriebene SaaS-Plattformen, LLM-Workflows und Enterprise-Product-Delivery.",
+      "Kostenlose client-seitige Entwickler-Tools, CSS-Generatoren und Deutschland-Ressourcen.",
   },
   nav: {
     home: "Start",
@@ -629,7 +629,7 @@ const de: Dict = {
     title1: "Über",
     title2: "Mich",
     intro:
-      "Ich bin Joseph — Senior Product Owner und Certified Scrum Master in Köln mit über 10 Jahren Erfahrung in SaaS-Plattformen, digitalen Produkten und Enterprise-Integrationen. Ich verbinde tiefe technische Expertise in Cloud-Architektur, LLM-Workflows und API-Systemen mit bewährtem Backlog-Ownership und Stakeholder-Alignment.",
+      "Kostenlose client-seitige Entwickler-Tools für Coder, Designer und den Alltag. JSON-Konverter, CSS-Generatoren, Regex-Tester und mehr — alles 100% im Browser.",
     intro2:
       "Meine Stärke liegt an der Schnittstelle von Business und Technik — komplexe Anforderungen in messbare Ergebnissen, ob KI-Engine für Immobilien-CRMs oder die Support-Infrastruktur eines Supercomputers.",
     skillsTitle: "Werkzeugkasten",
@@ -678,7 +678,7 @@ const de: Dict = {
     location: "Köln, Deutschland",
     emailLabel: "E-Mail",
     linkedinLabel: "LinkedIn",
-    linkedin: "linkedin.com/in/joejmz",
+    linkedin: "",
   },
   footer: {
     rights: "Alle Rechte vorbehalten.",
@@ -689,7 +689,7 @@ const de: Dict = {
 export const dict: Record<Lang, Dict> = { en, de };
 
 export const contact = {
-  email: "joseph.jmzt@gmail.com",
+  email: "",
   phone: "",
-  linkedinUrl: "https://linkedin.com/in/joejmz",
+  linkedinUrl: "",
 };

@@ -35,7 +35,7 @@ export default function ProfileCard() {
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
     >
       <img
-        src="/joseph.webp"
+        src="/logo.png"
         alt={t.meta.name}
         className="profile-photo"
       />

@@ -11,7 +11,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Developer Tools & Germany Resources — onyourbehaf.de",
+  title: "dev.ric.castle — Developer Tools & Resources",
   description:
     "Free client-side developer tools, CSS generators, and Germany residency resources. EN/DE bilingual.",
 };
