@@ -19,6 +19,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={spaceGrotesk.variable}>
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DSXWR1M2TK" />
+        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-DSXWR1M2TK');` }} />
+      </head>
       <body>
         <LanguageProvider>
           <Nav />
